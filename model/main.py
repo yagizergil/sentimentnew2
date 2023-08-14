@@ -41,6 +41,7 @@ class SentimentOutput(BaseModel):
     prediction: str
     lr_model_proba: list
 
+@CORSMiddleware(allow_origins=['*'], allow_methods=['*'], allow_headers=['*'])
 @app.post("/predict_sentiment/")
 
 async def predict_sentiment_endpoint(input_data: SentimentInput):
@@ -49,6 +50,7 @@ async def predict_sentiment_endpoint(input_data: SentimentInput):
     return SentimentOutput(prediction=prediction, lr_model_proba=lr_model_proba)
 
 
+@CORSMiddleware(allow_origins=['*'], allow_methods=['*'], allow_headers=['*'])
 @app.get("/get_sentiment_data/")
 async def get_sentiment_data_endpoint():
     data = get_sentiment_data()
@@ -56,6 +58,7 @@ async def get_sentiment_data_endpoint():
 
 
 
+@CORSMiddleware(allow_origins=['*'], allow_methods=['*'], allow_headers=['*'])
 @app.post("/save_sentiment/")
 async def save_sentiment_endpoint(input_data: SentimentInput):
     new_text_vector = vectorizer.transform([input_data.text])
