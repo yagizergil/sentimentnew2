@@ -19,7 +19,14 @@ function App() {
   const [inputText, setInputText] = useState('');
   const [data, setData] = useState([]);
 
+    const express = require('express');
+    const cors = require('cors');
 
+    const app = express();
+
+// Tüm kaynaklara erişime izin vermek için
+    app.use(cors());
+    
   const handleSubmit = () => {
     axios.post('http://localhost:8080/predict_sentiment/', { text: inputText })
       .then((response) => {
