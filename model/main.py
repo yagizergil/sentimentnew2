@@ -11,12 +11,19 @@ from .sentiment_model import predict_sentiment, load_vectorizer, save_sentiment_
 
 app = FastAPI()
 
-
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+    "https://sentimentanalysisgl.netlify.app",
+    "http://localhost:8080/predict_sentiment/"
+]
 
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Allows all origins
+    allow_origins=origins, # Allows all origins
     allow_credentials=True,
     allow_methods=["*"], # Allows all methods
     allow_headers=["*"], # Allows all headers
