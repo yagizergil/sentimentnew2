@@ -15,7 +15,7 @@ app = FastAPI()
 # Uygulamaya CORS ara yazılımını ekle neden CORS ara yazılımını eklediğimizi öğrenmek için: https://fastapi.tiangolo.com/tutorial/cors/
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://example.com","https://sentimentanalysisgl.netlify.app/","http://localhost:8080"],
+    allow_origins=["http://localhost:3000", "https://example.com","https://sentimentanalysisgl.netlify.app","http://localhost:8080"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
