@@ -11,11 +11,18 @@ from .sentiment_model import predict_sentiment, load_vectorizer, save_sentiment_
 
 app = FastAPI()
 
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost",
+    "http://localhost:8080",
+    "https://sentimentanalysisgl.netlify.app",
+]
 
 # Uygulamaya CORS ara yazılımını ekle neden CORS ara yazılımını eklediğimizi öğrenmek için: https://fastapi.tiangolo.com/tutorial/cors/
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://example.com","https://sentimentanalysisgl.netlify.app","http://localhost:8080"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -32,6 +39,7 @@ class SentimentOutput(BaseModel):
     lr_model_proba: list
 
 @app.post("/predict_sentiment/")
+
 async def predict_sentiment_endpoint(input_data: SentimentInput):
     text = input_data.text
     prediction, lr_model_proba = predict_sentiment(text)
