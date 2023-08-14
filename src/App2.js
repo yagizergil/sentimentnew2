@@ -18,7 +18,8 @@ function App() {
   const [onClick, setOnClick] = useState(false);
   const [inputText, setInputText] = useState('');
   const [data, setData] = useState([]);
-
+  const cors = require('cors');
+  app.use(cors());
 
   const handleSubmit = () => {
     axios.post('http://localhost:8080/predict_sentiment/', { text: inputText })
