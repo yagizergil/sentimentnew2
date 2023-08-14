@@ -20,7 +20,7 @@ function App() {
   const [data, setData] = useState([]);
 
   const handleSubmit = () => {
-    axios.post('https://sentimentanalysisgl.netlify.app/predict_sentiment/', { text: inputText })
+    axios.post('http://localhost:8080/predict_sentiment/', { text: inputText })
       .then((response) => {
         const { prediction, lr_model_proba } = response.data;
         setPrediction(prediction);
@@ -64,7 +64,7 @@ function App() {
   };
 
   const saveToDatabase = (text, prediction) => {
-    axios.post('https://sentimentanalysisgl.netlify.app/save_sentiment/', { text, prediction })
+    axios.post('http://localhost:8080/save_sentiment/', { text, prediction })
       .then((response) => {
         console.log('Veri başarıyla veritabanına kaydedildi.');
         fetchData();
@@ -76,7 +76,7 @@ function App() {
 
 
 const fetchData = () => {
-  axios.get('https://sentimentanalysisgl.netlify.app/get_sentiment_data/')
+  axios.get('http://localhost:8080/get_sentiment_data/')
     .then((response) => {
       const allData = response.data;
       const lastFiveData = allData.slice(-5); // Sadece son 5 veriyi al
