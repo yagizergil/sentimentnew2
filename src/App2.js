@@ -76,7 +76,7 @@ function App() {
 
 
 const fetchData = () => {
-  axios.get('http://localhost:8000/get_sentiment_data/')
+  axios.get('https://sentimentanalysisgl.netlify.app/get_sentiment_data/')
     .then((response) => {
       const allData = response.data;
       const lastFiveData = allData.slice(-5); // Sadece son 5 veriyi al
