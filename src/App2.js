@@ -20,7 +20,7 @@ function App() {
   const [data, setData] = useState([]);
 
   const handleSubmit = () => {
-    axios.post('http://localhost:8000/predict_sentiment/', { text: inputText })
+    axios.post('https://sentimentanalysisgl.netlify.app/predict_sentiment/', { text: inputText })
       .then((response) => {
         const { prediction, lr_model_proba } = response.data;
         setPrediction(prediction);
@@ -64,7 +64,7 @@ function App() {
   };
 
   const saveToDatabase = (text, prediction) => {
-    axios.post('http://localhost:8000/save_sentiment/', { text, prediction })
+    axios.post('https://sentimentanalysisgl.netlify.app/save_sentiment/', { text, prediction })
       .then((response) => {
         console.log('Veri başarıyla veritabanına kaydedildi.');
         fetchData();
