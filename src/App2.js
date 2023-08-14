@@ -20,13 +20,23 @@ function App() {
   const [data, setData] = useState([]);
 
 
-const cors = require('cors');
-const corsOptions ={
-    origin:'http://localhost:8080',
-    credentials:true,            //access-control-allow-credentials:true
-    optionSuccessStatus:200
-}
-app.use(cors(corsOptions));
+const express = require('express');
+const app = express();
+
+// Add middleware to handle CORS
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://sentimentanalysisgl.netlify.app');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
+// Rest of your server code
+
+app.listen(8080, () => {
+  console.log('Server is listening on port 8080');
+});
+
 
   const handleSubmit = () => {
     axios.post('http://localhost:8080/predict_sentiment/', { text: inputText })
