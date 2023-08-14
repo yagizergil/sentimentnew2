@@ -31,7 +31,12 @@ app.add_middleware(
 
 )
 
-
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', 'https://sentimentanalysisgl.netlify.app')
+    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    return response
 
 vectorizer = joblib.load('model/vectorizer.pkl')
 class SentimentInput(BaseModel):
@@ -68,4 +73,4 @@ async def save_sentiment_endpoint(input_data: SentimentInput):
     return {"mesaj": "Veriler başarıyla veritabanına kaydedildi."}
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(port=8080)
