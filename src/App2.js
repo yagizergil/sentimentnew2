@@ -4,6 +4,11 @@ import { FaArrowLeft, FaDatabase, FaQuestion, FaWhmcs } from "react-icons/fa";
 import ReactTyped from "react-typed";
 import axios from 'axios';
 
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+axios.defaults.headers.common['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';
+axios.defaults.headers.common['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept';
+
+
 function App() {
   const [loading, setLoading] = useState(false);
   const [positive, setPositive] = useState(0);
