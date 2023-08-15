@@ -1,3 +1,9 @@
+
+const cors = require("cors")
+
+
+app.use(cors());
+
 const allowedOrigins = ['https://sentimentanalysisgl.netlify.app'];
 
 const corsOptions = {
