@@ -23,6 +23,18 @@ function App() {
   const [onClick, setOnClick] = useState(false);
   const [inputText, setInputText] = useState('');
   const [data, setData] = useState([]);
+
+  const express = require('express');
+  const cors = require('cors');
+
+  const app = express();
+
+  app.use(cors()); 
+
+const port = process.env.PORT || 8080;
+app.listen(port, () => {
+  console.log(`Sunucu ${port} portunda çalışıyor`);
+});
   
   const handleSubmit = () => {
     axios.post('http://localhost:8080/predict_sentiment/', { text: inputText })
