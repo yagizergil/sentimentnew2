@@ -20,6 +20,13 @@ origins = [
     "http://localhost:8080/predict_sentiment/"
 ]
 
+cors = CORSMiddleware(
+    app,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 app.add_middleware(
     CORSMiddleware,
