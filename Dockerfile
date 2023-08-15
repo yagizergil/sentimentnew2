@@ -9,5 +9,5 @@ WORKDIR /app
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 RUN pip install fastapi uvicorn
 
-# Uygulamayı çalıştırın
-CMD ["uvicorn", "model.main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "model.main:app", "--host", "0.0.0.0", "--port", "80", "--reload"]
+
