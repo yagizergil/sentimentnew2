@@ -1,18 +1,13 @@
-const express = require('express');
-const cors = require('cors');
+const allowedOrigins = ['https://sentimentanalysisgl.netlify.app'];
 
-const app = express();
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Bu kaynağa erişim engellendi.'));
+    }
+  },
+};
 
-// CORS ayarlarını yapılandırın
-app.use(cors());
-
-// GET route örneği
-app.get('/example', (req, res) => {
-  res.json({ message: 'Merhaba, bu CORS örneğidir.' });
-});
-
-const port = process.env.PORT || 80;
-app.listen(port, () => {
-  console.log(`Sunucu ${port} portunda çalışıyor`);
-});
-
+app.use(cors(corsOptions));
