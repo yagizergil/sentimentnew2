@@ -1,20 +1,16 @@
-# Docker imajını temel alın
-FROM python:3.9
+# Node.js tabanlı resmi Docker görüntüsünü kullanalım
+FROM node:14
 
-# Uygulama kodunu konteynera kopyalayın
-COPY . /app
-WORKDIR /app
+# Uygulamanın çalışacağı bir çalışma dizini oluşturalım
+WORKDIR /usr/src/app
 
-# Gerekli bağımlılıkları yükleyin
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
-RUN pip install fastapi uvicorn
-
-# Express uygulamasını çalıştırın
-RUN apt-get update && apt-get install -y curl
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get install -y nodejs
-COPY ./server /app/server
-WORKDIR /app/server
+# Bağımlılıkları kopyalayalım ve yükleyelim
+COPY package*.json ./
 RUN npm install
-EXPOSE 80
-CMD ["npm", "start"]
+
+# Sunucu dosyasını kopyalayalım
+COPY server/server.js .
+
+# 8080 portunu dinleyecek şekilde sunucuyu çalıştıralım
+EXPOSE 8080
+CMD [ "node", "server.js" ]
