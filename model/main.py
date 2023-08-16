@@ -1,5 +1,7 @@
 # main.py
 import sqlite3
+from urllib.request import Request
+
 import joblib
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
@@ -38,12 +40,14 @@ app.add_middleware(
 
 )
 
-@app.after_request
-def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', 'https://sentimentanalysisgl.netlify.app')
-    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+@app.middleware("http")
+async def add_cors_header(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["Access-Control-Allow-Origin"] = "https://sentimentanalysisgl.netlify.app"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
     return response
+
 
 vectorizer = joblib.load('model/vectorizer.pkl')
 class SentimentInput(BaseModel):

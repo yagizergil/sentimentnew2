@@ -24,19 +24,26 @@ function App() {
   const [inputText, setInputText] = useState('');
   const [data, setData] = useState([]);
   
-  
   const handleSubmit = () => {
-    axios.post('http://localhost:8080/predict_sentiment/', { text: inputText })
-      .then((response) => {
-        const { prediction, lr_model_proba } = response.data;
+  const axiosConfig = {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
+    }
+  };
+
+  axios.post('http://localhost:8080/predict_sentiment/', { text: inputText }, axiosConfig)
+    .then((response) => {
+      const { prediction, lr_model_proba } = response.data;
         setPrediction(prediction);
         setLrModelProba(lr_model_proba);
         saveToDatabase(inputText, prediction);
-      })
-      .catch((error) => {
-        console.error('Error while making the prediction request:', error);
-      });
-  };
+    })
+    .catch((error) => {
+      console.error('Error while making the prediction request:', error);
+    });
+};
 
   const categorizeResults = () => {
     if (lrModelProba.length === 3) {
