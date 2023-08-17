@@ -13,40 +13,20 @@ from .sentiment_model import predict_sentiment, load_vectorizer, save_sentiment_
 
 app = FastAPI()
 
+# CORS ayarlarını genişletin
 origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
-    "http://localhost",
-    "http://localhost:8080",
-    "https://sentimentanalysisgl.netlify.app",
-    "http://localhost:8080/predict_sentiment/"
+    "http://localhost:3000",  # Bu URL'i frontend'inizle değiştirin
 ]
-
-cors = CORSMiddleware(
-    app,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"], # Allows all methods
-    allow_headers=["*"], # Allows all headers
-    options_passthrough=True,
-
+    allow_methods=["GET", "POST", "PUT", "DELETE","OPTIONS"],  # Tüm HTTP metodlarını ekledik
+    allow_headers=["*"],  # Tüm başlıklara izin veriyoruz, daha güvenli bir ayar yapabilirsiniz
 )
 
-@app.middleware("http")
-async def add_cors_header(request: Request, call_next):
-    response = await call_next(request)
-    response.headers["Access-Control-Allow-Origin"] = "https://sentimentanalysisgl.netlify.app"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE"
-    response.headers["Access-Control-Allow-Headers"] = "Content-Type"
-    return response
+
 
 
 vectorizer = joblib.load('model/vectorizer.pkl')
@@ -57,8 +37,7 @@ class SentimentOutput(BaseModel):
     prediction: str
     lr_model_proba: list
 
-@CORSMiddleware(allow_origins=['*'], allow_methods=['*'], allow_headers=['*'])
-@app.post("/predict_sentiment/")
+@app.post("/predict_sentiment")
 
 async def predict_sentiment_endpoint(input_data: SentimentInput):
     text = input_data.text
@@ -66,16 +45,14 @@ async def predict_sentiment_endpoint(input_data: SentimentInput):
     return SentimentOutput(prediction=prediction, lr_model_proba=lr_model_proba)
 
 
-@CORSMiddleware(allow_origins=['*'], allow_methods=['*'], allow_headers=['*'])
-@app.get("/get_sentiment_data/")
+@app.get("/get_sentiment_data")
 async def get_sentiment_data_endpoint():
     data = get_sentiment_data()
     return data
 
 
 
-@CORSMiddleware(allow_origins=['*'], allow_methods=['*'], allow_headers=['*'])
-@app.post("/save_sentiment/")
+@app.post("/save_sentiment")
 async def save_sentiment_endpoint(input_data: SentimentInput):
     new_text_vector = vectorizer.transform([input_data.text])
     sentiment_prediction, _ = predict_sentiment(input_data.text, new_text_vector)
@@ -84,4 +61,4 @@ async def save_sentiment_endpoint(input_data: SentimentInput):
     return {"mesaj": "Veriler başarıyla veritabanına kaydedildi."}
 
 if __name__ == "__main__":
-    app.run(port=8080)
+    app.run(port=8000)

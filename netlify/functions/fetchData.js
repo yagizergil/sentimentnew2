@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
 exports.handler = async (event, context) => {
-  const apiUrl = 'http://localhost:8080/api' + event.path;
+  const apiUrl = 'http://localhost:8000/api' + event.path;
   const response = await fetch(apiUrl);
   const data = await response.json();
 

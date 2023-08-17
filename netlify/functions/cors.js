@@ -17,7 +17,7 @@ exports.handler = async (event, context) => {
     }
   
     // Gerçek işlem burada yapılır, örnek olarak:
-    const apiUrl = 'http://localhost:8080/api' + event.path;
+    const apiUrl = 'http://localhost:8000/api' + event.path;
     const response = await fetch(apiUrl);
     const data = await response.json();
   

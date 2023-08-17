@@ -14,7 +14,7 @@ app.use(cors(corsOptions));
 
 // Diğer Express yönlendirmeleri ve işlemleri burada devam eder...
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

@@ -4,9 +4,7 @@ import { FaArrowLeft, FaDatabase, FaQuestion, FaWhmcs } from "react-icons/fa";
 import ReactTyped from "react-typed";
 import axios from 'axios';
 
-axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-axios.defaults.headers.common['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS';
-axios.defaults.headers.common['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept';
+
 
 
 function App() {
@@ -24,26 +22,21 @@ function App() {
   const [inputText, setInputText] = useState('');
   const [data, setData] = useState([]);
   
-  const handleSubmit = () => {
-  const axiosConfig = {
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-    }
-  };
 
-  axios.post('http://localhost:8080/predict_sentiment/', { text: inputText }, axiosConfig)
+const [predictionResults, setPredictionResults] = useState([]);
+
+const handleSubmit = () => {
+  axios.post('http://localhost:8000/predict_sentiment', { text: inputText })
     .then((response) => {
       const { prediction, lr_model_proba } = response.data;
-        setPrediction(prediction);
-        setLrModelProba(lr_model_proba);
-        saveToDatabase(inputText, prediction);
+      setPredictionResults([{ label: prediction, prob: lr_model_proba }]);
     })
     .catch((error) => {
       console.error('Error while making the prediction request:', error);
     });
 };
+
+
 
   const categorizeResults = () => {
     if (lrModelProba.length === 3) {
@@ -77,7 +70,7 @@ function App() {
   };
 
   const saveToDatabase = (text, prediction) => {
-    axios.post('http://localhost:8080/save_sentiment/', { text, prediction })
+    axios.post('http://localhost:8000/save_sentiment', { text, prediction })
       .then((response) => {
         console.log('Veri başarıyla veritabanına kaydedildi.');
         fetchData();
@@ -89,7 +82,7 @@ function App() {
 
 
 const fetchData = () => {
-  axios.get('http://localhost:8080/get_sentiment_data/')
+  axios.get('http://localhost:8000/get_sentiment_data')
     .then((response) => {
       const allData = response.data;
       const lastFiveData = allData.slice(-5); // Sadece son 5 veriyi al
@@ -319,27 +312,23 @@ const fetchData = () => {
                 </div>
                 <div className="rightSide">
                   <h1 className="smallArticle">Results</h1>
-                  <div className="resultsHeader">
-                    <div
-                      style={{
-                        fontWeight: "bold",
-                        borderBottom: "3px solid #fff",
-                      }}
-                    >
-                      <h4>TAG</h4>
-                      <span>CONFIDENCE</span>
-                    </div>
-                    {categorizeResults().map(({ label, prob }) => (
-                      <div key={label}>
-                        <h4>
-                          <span>{label === "Pozitif" ? "🙂" : label === "Negatif" ? "🙁" : "😶"}</span>
-                          {label}
-                        </h4>
 
-                        <span>{`${prob.toFixed(2)}%`}</span>
-                      </div>
-                    ))}
-                  </div>
+<div className="resultsHeader">
+  <div style={{ fontWeight: "bold" }}>
+    <h4>TAG</h4>
+    <span>CONFIDENCE</span>
+  </div>
+  {predictionResults.map(({ label, prob }) => (
+    <div key={label}>
+      <h4>
+        {label === "positive" ? "🙂" : label === "negative" ? "🙁" : "😶"}
+        {label}
+      </h4>
+      <p>
+      </p>
+    </div>
+  ))}
+</div>
                 </div>
               </div>
 
