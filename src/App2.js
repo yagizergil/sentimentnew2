@@ -26,7 +26,7 @@ function App() {
 const [predictionResults, setPredictionResults] = useState([]);
 
 const handleSubmit = () => {
-  axios.post('http://localhost:8000/predict_sentiment', { text: inputText })
+  axios.post('https://o8nn2ypfu9.execute-api.eu-central-1.amazonaws.com/predict_sentiment', { text: inputText })
     .then((response) => {
       const { prediction, lr_model_proba } = response.data;
       setPredictionResults([{ label: prediction, prob: lr_model_proba }]);
@@ -70,7 +70,7 @@ const handleSubmit = () => {
   };
 
   const saveToDatabase = (text, prediction) => {
-    axios.post('http://localhost:8000/save_sentiment', { text, prediction })
+    axios.post('https://o8nn2ypfu9.execute-api.eu-central-1.amazonaws.com/save_sentiment', { text, prediction })
       .then((response) => {
         console.log('Veri başarıyla veritabanına kaydedildi.');
         fetchData();
@@ -82,7 +82,7 @@ const handleSubmit = () => {
 
 
 const fetchData = () => {
-  axios.get('http://localhost:8000/get_sentiment_data')
+  axios.get('https://o8nn2ypfu9.execute-api.eu-central-1.amazonaws.com/get_sentiment_data')
     .then((response) => {
       const allData = response.data;
       const lastFiveData = allData.slice(-5); // Sadece son 5 veriyi al
