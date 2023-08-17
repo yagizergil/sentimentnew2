@@ -1,16 +1,20 @@
-# Node.js tabanlı resmi Docker görüntüsünü kullanalım
-FROM node:14
+# Resmi Python görüntüsünü temel alın
+FROM python:3.8-slim
 
-# Uygulamanın çalışacağı bir çalışma dizini oluşturalım
-WORKDIR /usr/src/app
+# Çalışma dizinini /app olarak ayarlayın
+WORKDIR /app
 
-# Bağımlılıkları kopyalayalım ve yükleyelim
-COPY package*.json ./
-RUN npm install
+# Gerekli bağımlılıkları kopyalayın (örnek olarak requirements.txt dosyasını kullanıyoruz)
+COPY requirements.txt requirements.txt
 
-# Sunucu dosyasını kopyalayalım
-COPY server/server.js .
+# Bağımlılıkları yükleyin
+RUN pip install -r requirements.txt
 
-# 8080 portunu dinleyecek şekilde sunucuyu çalıştıralım
-EXPOSE 8080
-CMD [ "node", "server.js" ]
+# Uygulama kodunu kopyalayın
+COPY . .
+
+# Uygulama portunu belirtin (örneğin FastAPI'de genellikle 8000)
+EXPOSE 8000
+
+# Uygulamayı çalıştırın
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
