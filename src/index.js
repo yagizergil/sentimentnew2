@@ -9,7 +9,10 @@ ReactDOM.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('root'),
+  () => {
+    document.title = 'Sentiment Analyzer'; // Burada istediğiniz başlığı belirleyebilirsiniz
+  }
 );
 
 reportWebVitals();
