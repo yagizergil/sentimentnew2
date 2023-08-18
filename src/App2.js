@@ -330,10 +330,11 @@ const fetchData = () => {
         {label === "Pozitif" ? "🙂" : label === "Negatif" ? "🙁" : "😶"}
         {label}
       </h4>
-      <p>{prob}%</p>
+      <p>{(prob * 100).toFixed(2)}%</p>
     </div>
   ))}
 </div>
+
 
 </div>
 
