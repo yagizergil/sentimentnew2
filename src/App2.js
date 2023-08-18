@@ -45,9 +45,9 @@ const handleSubmit = () => {
 
 const categorizeResults = (prediction, lr_model_proba) => {
   const labelMapping = {
-    "positive": "Pozitif",
-    "negative": "Negatif",
-    "neutral": "Nötr"
+    "positive": "Positive",
+    "negative": "Negative",
+    "neutral": "Neutral"
   };
 
   const positiveProb = lr_model_proba[2] * 100;
@@ -56,21 +56,21 @@ const categorizeResults = (prediction, lr_model_proba) => {
 
   if (prediction === "positive") {
     return [
-      { label: "Pozitif", prob: positiveProb },
-      { label: "Negatif", prob: negativeProb },
-      { label: "Nötr", prob: neutralProb }
+      { label: "Positive", prob: positiveProb },
+      { label: "Negative", prob: negativeProb },
+      { label: "Neutral", prob: neutralProb }
     ];
   } else if (prediction === "negative") {
     return [
-      { label: "Negatif", prob: negativeProb },
-      { label: "Pozitif", prob: positiveProb },
-      { label: "Nötr", prob: neutralProb }
+      { label: "Negative", prob: negativeProb },
+      { label: "Positive", prob: positiveProb },
+      { label: "Neutral", prob: neutralProb }
     ];
   } else {
     return [
-      { label: "Nötr", prob: neutralProb },
-      { label: "Pozitif", prob: positiveProb },
-      { label: "Negatif", prob: negativeProb }
+      { label: "Neutral", prob: neutralProb },
+      { label: "Positive", prob: positiveProb },
+      { label: "Negative", prob: negativeProb }
     ];
   }
 };
@@ -114,9 +114,9 @@ const fetchData = () => {
 
 
   const getEmoji = (deger) => {
-    if (deger === "Pozitif") {
+    if (deger === "Positive ") {
       return "🙂";
-    } else if (deger === "Negatif") {
+    } else if (deger === "Negative") {
       return "🙁";
     } else {
       return "😶";
@@ -327,14 +327,12 @@ const fetchData = () => {
   {predictionResults.map(({ label, prob }) => (
     <div key={label}>
       <h4>
-        {label === "Pozitif" ? "🙂" : label === "Negatif" ? "🙁" : "😶"}
-        {label}
+        {label === "Positive" ? "🙂 Positive" : label === "Negative" ? "🙁 Negative" : "😶 Neutral"}
       </h4>
-      <p>{(prob * 100).toFixed(2)}%</p>
+      <p>{prob.toFixed(2)}%</p>
     </div>
   ))}
 </div>
-
 
 </div>
 
