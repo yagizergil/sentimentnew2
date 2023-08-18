@@ -29,7 +29,12 @@ const handleSubmit = () => {
   axios.post('https://sentimentanalysisglx.click:8000/predict_sentiment', { text: inputText })
     .then((response) => {
       const { prediction, lr_model_proba } = response.data;
-      setPredictionResults([{ label: prediction, prob: lr_model_proba }]);
+      const categorizedResults = categorizeResults(prediction, lr_model_proba);
+
+      // Sonuçları olasılığa göre sırala
+      const sortedResults = categorizedResults.slice().sort((a, b) => b.prob - a.prob);
+
+      setPredictionResults(sortedResults);
     })
     .catch((error) => {
       console.error('Error while making the prediction request:', error);
@@ -38,36 +43,37 @@ const handleSubmit = () => {
 
 
 
-  const categorizeResults = () => {
-    if (lrModelProba.length === 3) {
-      const positiveProb = lrModelProba[2] * 100;
-      const negativeProb = lrModelProba[0] * 100;
-      const neutralProb = lrModelProba[1] * 100;
-      const maxProb = Math.max(positiveProb, negativeProb, neutralProb);
-
-      if (maxProb === positiveProb) {
-        return [
-          { label: "Pozitif", prob: positiveProb },
-          { label: "Negatif", prob: negativeProb },
-          { label: "Nötr", prob: neutralProb },
-        ];
-      } else if (maxProb === negativeProb) {
-        return [
-          { label: "Negatif", prob: negativeProb },
-          { label: "Pozitif", prob: positiveProb },
-          { label: "Nötr", prob: neutralProb },
-        ];
-      } else {
-        return [
-          { label: "Nötr", prob: neutralProb },
-          { label: "Pozitif", prob: positiveProb },
-          { label: "Negatif", prob: negativeProb },
-        ];
-      }
-    }
-
-    return [];
+const categorizeResults = (prediction, lr_model_proba) => {
+  const labelMapping = {
+    "positive": "Pozitif",
+    "negative": "Negatif",
+    "neutral": "Nötr"
   };
+
+  const positiveProb = lr_model_proba[2] * 100;
+  const negativeProb = lr_model_proba[0] * 100;
+  const neutralProb = lr_model_proba[1] * 100;
+
+  if (prediction === "positive") {
+    return [
+      { label: "Pozitif", prob: positiveProb },
+      { label: "Negatif", prob: negativeProb },
+      { label: "Nötr", prob: neutralProb }
+    ];
+  } else if (prediction === "negative") {
+    return [
+      { label: "Negatif", prob: negativeProb },
+      { label: "Pozitif", prob: positiveProb },
+      { label: "Nötr", prob: neutralProb }
+    ];
+  } else {
+    return [
+      { label: "Nötr", prob: neutralProb },
+      { label: "Pozitif", prob: positiveProb },
+      { label: "Negatif", prob: negativeProb }
+    ];
+  }
+};
 
   const saveToDatabase = (text, prediction) => {
     axios.post('https://sentimentanalysisglx.click:8000/save_sentiment', { text, prediction })
@@ -311,9 +317,9 @@ const fetchData = () => {
                   </div>
                 </div>
                 <div className="rightSide">
-                  <h1 className="smallArticle">Results</h1>
+  <h1 className="smallArticle">Results</h1>
 
-<div className="resultsHeader">
+  <div className="resultsHeader">
   <div style={{ fontWeight: "bold" }}>
     <h4>TAG</h4>
     <span>CONFIDENCE</span>
@@ -321,15 +327,16 @@ const fetchData = () => {
   {predictionResults.map(({ label, prob }) => (
     <div key={label}>
       <h4>
-        {label === "positive" ? "🙂" : label === "negative" ? "🙁" : "😶"}
+        {label === "Pozitif" ? "🙂" : label === "Negatif" ? "🙁" : "😶"}
         {label}
       </h4>
-      <p>
-      </p>
+      <p>{prob}%</p>
     </div>
   ))}
 </div>
-                </div>
+
+</div>
+
               </div>
 
               <div className="copyright">
